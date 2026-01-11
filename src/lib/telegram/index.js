@@ -24,31 +24,12 @@ function normalizeEmoji(emoji) {
   return emojiMap[emoji] || emoji
 }
 
-const customEmojiCache = new LRUCache({
-  ttl: 1000 * 60 * 60 * 24, // 24 hours
-  max: 500,
-})
-
 async function getCustomEmojiImage(emojiId, staticProxy = '') {
   if (!emojiId)
     return null
-  const cached = customEmojiCache.get(emojiId)
-  if (cached?.thumb) {
-    return `${staticProxy}${cached.thumb}`
-  }
-  try {
-    const data = await $fetch(`https://t.me/i/emoji/${emojiId}.json`)
-    if (data) {
-      customEmojiCache.set(emojiId, data)
-      if (data.thumb) {
-        return `${staticProxy}${data.thumb}`
-      }
-    }
-  }
-  catch (error) {
-    console.error('Failed to load custom emoji metadata', emojiId, error)
-  }
-  return null
+  const imageUrl = `https://t.me/i/emoji/${emojiId}.webp`
+  const proxy = staticProxy || '/static/'
+  return `${proxy}${imageUrl}`
 }
 
 async function hydrateTgEmoji($, content, { staticProxy } = {}) {
