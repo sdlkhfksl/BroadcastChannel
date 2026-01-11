@@ -30,6 +30,26 @@ const timeago = datetime.isBefore(dayjs().subtract(1, 'w')) ? datetime.format('H
   </div>
   {post.content.length > 0 && <div class={`text-box content`} set:html={post.content} />}
   {
+    post.reactions?.length > 0 && (
+      <div class="reaction-list">
+        {post.reactions.map((reaction) => (
+          <span class={`reaction-pill${reaction.isPaid ? ' reaction-pill-paid' : ''}`}>
+            <span class="reaction-emoji">
+              {
+                reaction.isPaid
+                  ? '⭐'
+                  : reaction.emojiImage
+                    ? <img src={reaction.emojiImage} alt={reaction.emoji || 'emoji'} loading="lazy" />
+                    : reaction.emoji
+              }
+            </span>
+            <span class="reaction-count">{reaction.count}</span>
+          </span>
+        ))}
+      </div>
+    )
+  }
+  {
     post.tags.length > 0 && (
       <div class="tag-box" style={post.content.length === 0 ? 'padding-top: 30px;' : ''}>
         <div class="tag-icon" />
