@@ -327,6 +327,17 @@ audio::-webkit-media-controls-panel {
   margin-left: 3px;
 }
 
+.reaction-box {
+  border-left: 2px solid var(--border-color);
+  padding: 6px 0px 24px 30px;
+  margin-left: 3px;
+}
+
+.text-box + .reaction-box {
+  margin-top: -12px;
+  padding-top: 0px;
+}
+
 .text-box p:first-child {
   margin-top: 0px;
 }

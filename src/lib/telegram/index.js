@@ -13,22 +13,6 @@ const cache = new LRUCache({
   },
 })
 
-// Common emoji-id to standard emoji fallback mapping
-const EMOJI_ID_FALLBACK = {
-  '5368324170671202286': '\uD83D\uDC4D',
-  '5427127139151397446': '\uD83E\uDD1D',
-  '5388841349703284277': '\uD83D\uDD25',
-  '5265077361648368841': '\u2764\uFE0F',
-  '5388967613151851494': '\uD83C\uDF89',
-  '5881813392380923308': '\uD83D\uDE0D',
-  '5456669990092545624': '\uD83D\uDCAF',
-  '5384108682290152083': '\uD83D\uDC4F',
-  '5449800250032143374': '\uD83D\uDE02',
-  '5006239808935167310': '\uD83D\uDE97',
-  '5472105307985419058': '\u261D\uFE0F',
-  '5375338737028841420': '\uD83E\uDD29',
-}
-
 // Normalize emoji variants (e.g., heart variants)
 function normalizeEmoji(emoji) {
   const emojiMap = {
@@ -40,36 +24,10 @@ function normalizeEmoji(emoji) {
   return emojiMap[emoji] || emoji
 }
 
-const customEmojiFallback = new Map(Object.entries(EMOJI_ID_FALLBACK))
-
 const customEmojiCache = new LRUCache({
   ttl: 1000 * 60 * 60 * 24, // 24 hours
   max: 500,
 })
-
-function getEmojiFallback(emojiId) {
-  if (!emojiId)
-    return ''
-  return customEmojiFallback.get(emojiId) || ''
-}
-
-function setEmojiFallback(emojiId, emoji) {
-  if (!emojiId || !emoji)
-    return
-  customEmojiFallback.set(emojiId, emoji)
-}
-
-function extractTgEmojiFallback($, emojiEl) {
-  const nestedEmoji = $(emojiEl).find('.emoji b').text().trim()
-  if (nestedEmoji) {
-    return normalizeEmoji(nestedEmoji)
-  }
-  const attrEmoji = $(emojiEl).attr('emoji') ?? $(emojiEl).attr('alt') ?? ''
-  if (attrEmoji) {
-    return normalizeEmoji(attrEmoji.trim())
-  }
-  return ''
-}
 
 async function getCustomEmojiImage(emojiId, staticProxy = '') {
   if (!emojiId)
@@ -100,15 +58,6 @@ async function hydrateTgEmoji($, content, { staticProxy } = {}) {
 
   await Promise.all(emojiNodes.map(async (emojiEl) => {
     const emojiId = $(emojiEl).attr('emoji-id')
-    const nestedFallback = extractTgEmojiFallback($, emojiEl)
-    const fallback = nestedFallback || getEmojiFallback(emojiId)
-    if (emojiId && fallback) {
-      setEmojiFallback(emojiId, fallback)
-    }
-    if (fallback) {
-      $(emojiEl).text(fallback)
-      return
-    }
     if (!emojiId)
       return
 
@@ -264,16 +213,9 @@ async function getReactions($, item, staticProxy) {
     if (tgEmoji.length && !emoji) {
       emojiId = tgEmoji.attr('emoji-id')
       if (emojiId) {
-        const nestedFallback = extractTgEmojiFallback($, tgEmoji.get(0))
-        emoji = nestedFallback || getEmojiFallback(emojiId)
-        if (emoji) {
-          setEmojiFallback(emojiId, emoji)
-        }
-        else {
-          const imageUrl = await getCustomEmojiImage(emojiId, staticProxy)
-          if (imageUrl) {
-            emojiImage = imageUrl
-          }
+        const imageUrl = await getCustomEmojiImage(emojiId, staticProxy)
+        if (imageUrl) {
+          emojiImage = imageUrl
         }
       }
     }
@@ -288,7 +230,7 @@ async function getReactions($, item, staticProxy) {
 
     if (count) {
       reactions.push({
-        emoji: emoji || (emojiImage ? '' : '\uD83D\uDC4D'),
+        emoji,
         emojiId,
         emojiImage,
         count,
