@@ -10,7 +10,9 @@ const targetWhitelist = [
 
 export async function GET({ request, params, url }) {
   try {
-    const target = new URL(params.url + url.search)
+    const rawTarget = params.url + url.search
+    const normalizedTarget = rawTarget.startsWith('//') ? `https:${rawTarget}` : rawTarget
+    const target = new URL(normalizedTarget)
     if (!targetWhitelist.some(domain => target.hostname.endsWith(domain))) {
       return Response.redirect(target.toString(), 302)
     }
