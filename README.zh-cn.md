@@ -129,6 +129,9 @@ TAGS=标签A,标签B,标签C
 ## 展示评论
 COMMENTS=true
 
+## 展示 Reactions
+REACTIONS=true
+
 ## 链接页面中的超链接, 使用英文逗号和分号分割
 LINKS=Title1,URL1;Title2,URL3;Title3,URL3;
 

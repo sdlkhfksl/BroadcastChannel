@@ -131,6 +131,9 @@ TAGS=tag1,tag2,tag3
 ## Show comments
 COMMENTS=true
 
+## Show reactions
+REACTIONS=true
+
 ## List of links in the Links page, Separate using commas and semicolons
 LINKS=Title1,URL1;Title2,URL3;Title3,URL3;
 
