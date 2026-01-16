@@ -24,7 +24,7 @@ function normalizeEmoji(emoji) {
   return emojiMap[emoji] || emoji
 }
 
-async function getCustomEmojiImage(emojiId, staticProxy = '') {
+function getCustomEmojiImage(emojiId, staticProxy = '') {
   if (!emojiId)
     return null
   const imageUrl = `https://t.me/i/emoji/${emojiId}.webp`
@@ -36,12 +36,12 @@ async function hydrateTgEmoji($, content, { staticProxy } = {}) {
   if (!emojiNodes.length)
     return
 
-  await Promise.all(emojiNodes.map(async (emojiEl) => {
+  await Promise.all(emojiNodes.map((emojiEl) => {
     const emojiId = $(emojiEl).attr('emoji-id')
     if (!emojiId)
       return
 
-    const imageUrl = await getCustomEmojiImage(emojiId, staticProxy)
+    const imageUrl = getCustomEmojiImage(emojiId, staticProxy)
     if (imageUrl) {
       const imageMarkup = `<img class="tg-emoji" src="${imageUrl}" alt="" loading="lazy" />`
       $(emojiEl).replaceWith(imageMarkup)
@@ -174,7 +174,7 @@ async function modifyHTMLContent($, content, { index, staticProxy } = {}) {
   return content
 }
 
-async function getReactions($, item, staticProxy) {
+function getReactions($, item, staticProxy) {
   const reactions = []
   const reactionNodes = $(item).find('.tgme_widget_message_reactions .tgme_reaction').toArray()
 
@@ -193,7 +193,7 @@ async function getReactions($, item, staticProxy) {
     if (tgEmoji.length && !emoji) {
       emojiId = tgEmoji.attr('emoji-id')
       if (emojiId) {
-        const imageUrl = await getCustomEmojiImage(emojiId, staticProxy)
+        const imageUrl = getCustomEmojiImage(emojiId, staticProxy)
         if (imageUrl) {
           emojiImage = imageUrl
         }
@@ -264,7 +264,7 @@ async function getPost($, item, { channel, staticProxy, index = 0, reactionsEnab
       }
       return `${p1}${staticProxy}${p2}`
     }),
-    reactions: reactionsEnabled ? await getReactions($, item, staticProxy) : [],
+    reactions: reactionsEnabled ? getReactions($, item, staticProxy) : [],
   }
 }
 
