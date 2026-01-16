@@ -28,8 +28,7 @@ async function getCustomEmojiImage(emojiId, staticProxy = '') {
   if (!emojiId)
     return null
   const imageUrl = `https://t.me/i/emoji/${emojiId}.webp`
-  const proxy = staticProxy || '/static/'
-  return `${proxy}${imageUrl}`
+  return `${staticProxy}${imageUrl}`
 }
 
 async function hydrateTgEmoji($, content, { staticProxy } = {}) {
