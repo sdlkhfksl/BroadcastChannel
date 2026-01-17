@@ -234,6 +234,12 @@
     margin-right: 2px;
   }
 
+  .tg-emoji {
+    width: 1.15em;
+    height: 1.15em;
+    vertical-align: -0.15em;
+  }
+
   .sticker {
     box-shadow: none;
     border: none;
@@ -259,6 +265,50 @@
       color: unset;
     }
   }
+}
+
+.reaction-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+}
+
+.reaction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 6px;
+  font-size: 12px;
+  color: var(--secondary-color);
+  background: var(--code-background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+}
+
+.reaction-pill-paid {
+  background: rgba(255, 196, 0, 0.12);
+  border-color: rgba(255, 196, 0, 0.35);
+  color: #9a6a00;
+}
+
+.reaction-emoji {
+  display: inline-flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.reaction-emoji img {
+  width: 1em;
+  height: 1em;
+  display: block;
+}
+
+.reaction-count {
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.8;
 }
 
 .tag-box {

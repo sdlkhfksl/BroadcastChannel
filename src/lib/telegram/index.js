@@ -13,6 +13,42 @@ const cache = new LRUCache({
   },
 })
 
+// Normalize emoji variants (e.g., heart variants)
+function normalizeEmoji(emoji) {
+  const emojiMap = {
+    '\u2764': '\u2764\uFE0F',
+    '\u263A': '\u263A\uFE0F',
+    '\u2639': '\u2639\uFE0F',
+    '\u2665': '\u2764\uFE0F',
+  }
+  return emojiMap[emoji] || emoji
+}
+
+function getCustomEmojiImage(emojiId, staticProxy = '') {
+  if (!emojiId)
+    return null
+  const imageUrl = `https://t.me/i/emoji/${emojiId}.webp`
+  return `${staticProxy}${imageUrl}`
+}
+
+async function hydrateTgEmoji($, content, { staticProxy } = {}) {
+  const emojiNodes = $(content).find('tg-emoji')?.toArray() ?? []
+  if (!emojiNodes.length)
+    return
+
+  await Promise.all(emojiNodes.map((emojiEl) => {
+    const emojiId = $(emojiEl).attr('emoji-id')
+    if (!emojiId)
+      return
+
+    const imageUrl = getCustomEmojiImage(emojiId, staticProxy)
+    if (imageUrl) {
+      const imageMarkup = `<img class="tg-emoji" src="${imageUrl}" alt="" loading="lazy" />`
+      $(emojiEl).replaceWith(imageMarkup)
+    }
+  }))
+}
+
 function getVideoStickers($, item, { staticProxy, index }) {
   return $(item).find('.js-videosticker_video')?.map((_index, video) => {
     const url = $(video)?.attr('src')
@@ -101,7 +137,8 @@ function getReply($, item, { channel }) {
   return $.html(reply)
 }
 
-function modifyHTMLContent($, content, { index } = {}) {
+async function modifyHTMLContent($, content, { index, staticProxy } = {}) {
+  await hydrateTgEmoji($, content, { staticProxy })
   $(content).find('.emoji')?.removeAttr('style')
   $(content).find('a')?.each((_index, a) => {
     $(a)?.attr('title', $(a)?.text())?.removeAttr('onclick')
@@ -137,11 +174,59 @@ function modifyHTMLContent($, content, { index } = {}) {
   return content
 }
 
-function getPost($, item, { channel, staticProxy, index = 0 }) {
+function getReactions($, item, staticProxy) {
+  const reactions = []
+  const reactionNodes = $(item).find('.tgme_widget_message_reactions .tgme_reaction').toArray()
+
+  for (const reaction of reactionNodes) {
+    const isPaid = $(reaction).hasClass('tgme_reaction_paid')
+    let emoji = ''
+    let emojiId
+    let emojiImage
+
+    const standardEmoji = $(reaction).find('.emoji b')
+    if (standardEmoji.length) {
+      emoji = normalizeEmoji(standardEmoji.text().trim())
+    }
+
+    const tgEmoji = $(reaction).find('tg-emoji')
+    if (tgEmoji.length && !emoji) {
+      emojiId = tgEmoji.attr('emoji-id')
+      if (emojiId) {
+        const imageUrl = getCustomEmojiImage(emojiId, staticProxy)
+        if (imageUrl) {
+          emojiImage = imageUrl
+        }
+      }
+    }
+
+    if (isPaid && !emoji && !emojiImage) {
+      emoji = '\u2B50'
+    }
+
+    const clone = $(reaction).clone()
+    clone.find('.emoji, tg-emoji, i').remove()
+    const count = clone.text().trim()
+
+    if (count) {
+      reactions.push({
+        emoji,
+        emojiId,
+        emojiImage,
+        count,
+        isPaid,
+      })
+    }
+  }
+
+  return reactions
+}
+
+async function getPost($, item, { channel, staticProxy, index = 0, reactionsEnabled } = {}) {
   item = item ? $(item).find('.tgme_widget_message') : $('.tgme_widget_message')
   const content = $(item).find('.js-message_reply_text')?.length > 0
-    ? modifyHTMLContent($, $(item).find('.tgme_widget_message_text.js-message_text'), { index })
-    : modifyHTMLContent($, $(item).find('.tgme_widget_message_text'), { index })
+    ? await modifyHTMLContent($, $(item).find('.tgme_widget_message_text.js-message_text'), { index, staticProxy })
+    : await modifyHTMLContent($, $(item).find('.tgme_widget_message_text'), { index, staticProxy })
   const title = content?.text()?.match(/^.*?(?=[。\n]|http\S)/g)?.[0] ?? content?.text() ?? ''
   const id = $(item).attr('data-post')?.replace(new RegExp(`${channel}/`, 'i'), '')
 
@@ -179,6 +264,7 @@ function getPost($, item, { channel, staticProxy, index = 0 }) {
       }
       return `${p1}${staticProxy}${p2}`
     }),
+    reactions: reactionsEnabled ? getReactions($, item, staticProxy) : [],
   }
 }
 
@@ -197,6 +283,7 @@ export async function getChannelInfo(Astro, { before = '', after = '', q = '', t
   const host = getEnv(import.meta.env, Astro, 'TELEGRAM_HOST') ?? 't.me'
   const channel = getEnv(import.meta.env, Astro, 'CHANNEL')
   const staticProxy = getEnv(import.meta.env, Astro, 'STATIC_PROXY') ?? '/static/'
+  const reactionsEnabled = getEnv(import.meta.env, Astro, 'REACTIONS')
 
   const url = id ? `https://${host}/${channel}/${id}?embed=1&mode=tme` : `https://${host}/s/${channel}`
   const headers = Object.fromEntries(Astro.request.headers)
@@ -221,19 +308,21 @@ export async function getChannelInfo(Astro, { before = '', after = '', q = '', t
 
   const $ = cheerio.load(html, {}, false)
   if (id) {
-    const post = getPost($, null, { channel, staticProxy })
+    const post = await getPost($, null, { channel, staticProxy, reactionsEnabled })
     cache.set(cacheKey, post)
     return post
   }
-  const posts = $('.tgme_channel_history  .tgme_widget_message_wrap')?.map((index, item) => {
-    return getPost($, item, { channel, staticProxy, index })
-  })?.get()?.reverse().filter(post => ['text'].includes(post.type) && post.id && post.content)
+  const posts = (await Promise.all(
+    $('.tgme_channel_history  .tgme_widget_message_wrap')?.map((index, item) => {
+      return getPost($, item, { channel, staticProxy, index, reactionsEnabled })
+    })?.get() ?? [],
+  ))?.reverse().filter(post => ['text'].includes(post.type) && post.id && post.content)
 
   const channelInfo = {
     posts,
     title: $('.tgme_channel_info_header_title')?.text(),
     description: $('.tgme_channel_info_description')?.text(),
-    descriptionHTML: modifyHTMLContent($, $('.tgme_channel_info_description'))?.html(),
+    descriptionHTML: (await modifyHTMLContent($, $('.tgme_channel_info_description'), { staticProxy }))?.html(),
     avatar: $('.tgme_page_photo_image img')?.attr('src'),
   }
 

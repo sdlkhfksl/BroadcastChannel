@@ -14,6 +14,7 @@ const { post, isItem } = Astro.props
 
 const channel = getEnv(import.meta.env, Astro, 'CHANNEL')
 const COMMENTS = getEnv(import.meta.env, Astro, 'COMMENTS')
+const REACTIONS = getEnv(import.meta.env, Astro, 'REACTIONS')
 
 const datetime = dayjs(post.datetime).tz(timezone)
 const timeago = datetime.isBefore(dayjs().subtract(1, 'w')) ? datetime.format('HH:mm · ll · ddd') : datetime.fromNow()
@@ -29,6 +30,28 @@ const timeago = datetime.isBefore(dayjs().subtract(1, 'w')) ? datetime.format('H
     </div>
   </div>
   {post.content.length > 0 && <div class={`text-box content`} set:html={post.content} />}
+  {
+    REACTIONS && post.reactions?.length > 0 && (
+      <div class="reaction-box">
+        <div class="reaction-list">
+          {post.reactions.map((reaction) => (
+            <span class={`reaction-pill${reaction.isPaid ? ' reaction-pill-paid' : ''}`}>
+              <span class="reaction-emoji">
+                {
+                  reaction.isPaid
+                    ? '\u2B50'
+                    : reaction.emojiImage
+                      ? <img src={reaction.emojiImage} alt={reaction.emoji || 'emoji'} loading="lazy" />
+                      : reaction.emoji
+                }
+              </span>
+              <span class="reaction-count">{reaction.count}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    )
+  }
   {
     post.tags.length > 0 && (
       <div class="tag-box" style={post.content.length === 0 ? 'padding-top: 30px;' : ''}>
