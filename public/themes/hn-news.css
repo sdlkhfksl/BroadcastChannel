@@ -385,12 +385,12 @@ body.post .post-entry {
 }
 
 .post-meta {
-  min-height: 12px;
+  min-height: 14px;
   margin-top: 1px;
   color: var(--muted-color);
-  font-size: 9.333px;
+  font-size: 11px;
   font-variant-numeric: tabular-nums;
-  line-height: 12px;
+  line-height: 14px;
 }
 
 .post-meta a:link,
@@ -417,6 +417,17 @@ body.feed .post-meta a:visited {
 
 .post-content {
   padding-top: 0.55rem;
+}
+
+.post-content .post-title-source {
+  display: none;
+}
+
+.post-content > .post-title-source + br,
+.post-content > .post-title-source + br + br,
+.post-content > :has(> .post-title-source) + br,
+.post-content > :has(> .post-title-source) + br + br {
+  display: none;
 }
 
 .post-reactions,
@@ -470,7 +481,9 @@ body.feed .post-meta a:visited {
 .post-comments {
   margin-top: 0.75rem;
   padding: 0.6rem 0 0;
+  border: 0;
   border-top: 1px solid var(--border-color);
+  background: transparent;
 }
 
 .post-comments iframe {
@@ -867,9 +880,20 @@ body.feed .post-meta a:visited {
   }
 
   .mobile-search summary {
+    position: relative;
     width: 28px;
     height: 28px;
     color: #000;
+  }
+
+  .mobile-search summary::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 44px;
+    height: 44px;
+    content: '';
+    transform: translate(-50%, -50%);
   }
 
   .mobile-search[open] {
@@ -994,6 +1018,10 @@ body.feed .post-meta a:visited {
 
   .directory-list {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .directory-list a {
+    min-height: 44px;
   }
 }
 

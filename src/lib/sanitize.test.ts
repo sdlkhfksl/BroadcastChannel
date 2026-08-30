@@ -56,4 +56,10 @@ describe.each([
     expect(result).not.toContain('onerror=')
     expect(result).not.toContain('alert(\'script\')')
   })
+
+  it('preserves the semantic sticker fallback', () => {
+    const result = sanitize('<span class="sticker-fallback" role="img" aria-label="Sticker unavailable">Sticker unavailable</span>')
+
+    expect(result).toBe('<span class="sticker-fallback" role="img" aria-label="Sticker unavailable">Sticker unavailable</span>')
+  })
 })

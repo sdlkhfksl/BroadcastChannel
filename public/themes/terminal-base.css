@@ -375,6 +375,20 @@ hr {
   padding-top: 1rem;
 }
 
+.post-comments {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border: 1px solid var(--terminal-border);
+  background: #fff;
+  color-scheme: light;
+}
+
+.post-comments iframe {
+  display: block;
+  background: #fff;
+  color-scheme: light;
+}
+
 .post-reactions > ul {
   gap: 0.45rem;
 }

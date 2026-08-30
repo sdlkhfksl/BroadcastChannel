@@ -504,6 +504,20 @@ body.post .post-content {
   box-shadow: var(--shadow-soft);
 }
 
+.pagination a {
+  position: relative;
+}
+
+.pagination a::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  content: '';
+  transform: translate(-50%, -50%);
+}
+
 .pagination a:hover,
 #back-to-top:hover {
   border-color: #858d97;

@@ -7,7 +7,129 @@ import { getAudio, getForwardedFrom, getImages, getImageStickers, getLinkPreview
 import { renderRawContent } from './renderers/raw'
 import { normalizeUrlAttributes } from './url'
 
-const TITLE_PREVIEW_REGEX = /^.*?(?=[。\n]|http\S)/g
+const TITLE_PREVIEW_REGEX = /^.*?(?=[。\n]|http\S)/
+const BLOCK_TAGS = new Set('address article aside blockquote div dl fieldset figure footer form h1 h2 h3 h4 h5 h6 header hr main nav ol p pre section table ul'.split(' '))
+const INTERACTIVE_TAGS = new Set(['a', 'button', 'input', 'label', 'select', 'textarea', 'tg-spoiler'])
+
+type TextNode = AnyNode
+
+function getTextData(node: TextNode): string {
+  return (node as unknown as { data: string }).data
+}
+
+function setTextData(node: TextNode, data: string): void {
+  (node as unknown as { data: string }).data = data
+}
+
+function getFirstVisibleSegment(content: MessageSelection): TextNode[] {
+  const segments: TextNode[][] = [[]]
+
+  const breakSegment = () => {
+    if (segments.at(-1)?.length) {
+      segments.push([])
+    }
+  }
+  const visit = (node: AnyNode) => {
+    if (node.type === 'text') {
+      segments.at(-1)?.push(node as TextNode)
+      return
+    }
+    if (node.type !== 'tag' || node.name === 'script' || node.name === 'style') {
+      return
+    }
+    if (node.name === 'br') {
+      breakSegment()
+      return
+    }
+    for (const child of node.childNodes) {
+      visit(child)
+    }
+  }
+
+  for (const node of content.contents().toArray()) {
+    const isBlock = node.type === 'tag' && BLOCK_TAGS.has(node.name)
+    if (isBlock) {
+      breakSegment()
+    }
+    visit(node)
+    if (isBlock) {
+      breakSegment()
+    }
+  }
+
+  return segments.find(segment => segment.some(node => getTextData(node).trim())) ?? []
+}
+
+function hasInteractiveAncestor(node: TextNode, contentNode: AnyNode): boolean {
+  let parent = node.parent
+  while (parent && parent !== contentNode) {
+    if (parent.type === 'tag' && INTERACTIVE_TAGS.has(parent.name)) {
+      return true
+    }
+    parent = parent.parent
+  }
+  return false
+}
+
+function markTitleSource($: CheerioAPI, content: MessageSelection, nodes: TextNode[], length: number): void {
+  const contentNode = content.get(0)
+  let coveredLength = 0
+  const coveredNodes = nodes.filter((node) => {
+    const nodeLength = getTextData(node).length
+    const covered = coveredLength < length && nodeLength > 0
+    coveredLength += nodeLength
+    return covered
+  })
+  if (!contentNode || coveredNodes.some(node => hasInteractiveAncestor(node, contentNode))) {
+    return
+  }
+
+  let remaining = length
+  for (const node of nodes) {
+    if (remaining <= 0) {
+      break
+    }
+    const nodeText = getTextData(node)
+    const markedText = nodeText.slice(0, remaining)
+    if (!markedText) {
+      continue
+    }
+
+    const parent = node.parent
+    const nodeIndex = parent?.childNodes.indexOf(node) ?? -1
+    const marker = $('<span class="post-title-source"></span>').text(markedText).get(0)
+    if (!parent || nodeIndex < 0 || !marker) {
+      return
+    }
+
+    marker.parent = parent
+    if (markedText.length < nodeText.length) {
+      setTextData(node, nodeText.slice(markedText.length))
+      parent.childNodes.splice(nodeIndex, 1, marker, node)
+    }
+    else {
+      parent.childNodes.splice(nodeIndex, 1, marker)
+    }
+    remaining -= markedText.length
+  }
+}
+
+function extractTitleAndMarkSource($: CheerioAPI, content: MessageSelection): string {
+  const segment = getFirstVisibleSegment(content)
+  const segmentText = segment.map(getTextData).join('')
+  if (!segmentText.trim()) {
+    return ''
+  }
+
+  const title = segmentText.match(TITLE_PREVIEW_REGEX)?.[0] ?? segmentText
+  if (!title) {
+    return ''
+  }
+
+  const markerLength = segmentText[title.length] === '。' ? title.length + 1 : title.length
+  markTitleSource($, content, segment, markerLength)
+  return title
+}
 
 function isNonEmptyString(value: string | null | undefined): value is string {
   return Boolean(value)
@@ -119,7 +241,7 @@ export async function extractPost($: CheerioAPI, item: AnyNode | null, options: 
     { index, telegramHost, staticProxy, normalizeUrls: false },
   )
   const contentText = content.text()
-  const title = contentText.match(TITLE_PREVIEW_REGEX)?.[0] ?? contentText
+  const title = extractTitleAndMarkSource($, content)
   const id = message.attr('data-post')?.replace(new RegExp(`${channel}/`, 'i'), '') ?? ''
   const tags = rewriteTagLinksAndCollectTags($, content)
   const contentHtml = renderPostContent($, message, content, { channel, staticProxy, index, id, title })

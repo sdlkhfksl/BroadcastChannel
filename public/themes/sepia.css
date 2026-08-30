@@ -204,6 +204,10 @@ hr {
 .post-comments {
   padding-top: 0.4rem;
   padding-bottom: 1.5rem;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  background: transparent;
 }
 
 .post-entry > .post-meta + .post-tags,
@@ -282,6 +286,8 @@ hr {
 }
 
 #back-to-top {
+  right: max(1.25rem, env(safe-area-inset-right));
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
   border-color: transparent;
   background: var(--code-background-color);
   box-shadow: var(--shadow-soft);
@@ -362,6 +368,11 @@ hr {
     columns: 1;
     column-rule: 0;
   }
+
+  .directory-list a {
+    display: inline-block;
+    min-height: auto;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -369,5 +380,120 @@ hr {
   .site-navigation a,
   .pagination a {
     transition: none;
+  }
+}
+
+@media print {
+  @page {
+    margin: 15mm;
+  }
+
+  :root {
+    --background-color: #fff;
+    --heading-color: #000;
+    --text-color: #000;
+    --link-color: #000;
+    --visited-color: #000;
+    --border-color: #777;
+    --surface-color: #fff;
+    --code-background-color: #f2f2f2;
+    --code-color: #000;
+    --blockquote-color: #000;
+  }
+
+  html {
+    color-scheme: light;
+    background: #fff;
+  }
+
+  body {
+    display: block;
+    width: auto;
+    max-width: none;
+    min-height: auto;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+    overflow: visible;
+  }
+
+  .skip-link,
+  .avatar-link,
+  .social-links,
+  .site-navigation,
+  .post-reactions,
+  .post-comments,
+  .pagination,
+  .site-footer,
+  #back-to-top-wrapper,
+  .content .modal,
+  .content .tg-expandable__toggle {
+    display: none !important;
+  }
+
+  .site-header {
+    display: block;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #777;
+  }
+
+  #main-content {
+    padding-top: 1.5rem;
+  }
+
+  .posts-feed {
+    margin-left: 0;
+  }
+
+  .post-entry {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #aaa;
+    break-inside: auto;
+  }
+
+  .post-content,
+  .post-tags {
+    margin-left: 0;
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  a:link,
+  a:visited {
+    color: #000;
+    text-decoration: underline;
+  }
+
+  .content pre {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .content table {
+    overflow: visible;
+  }
+
+  .content pre,
+  .content table,
+  .content blockquote,
+  .content tr {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .content .tg-expandable__content {
+    display: block;
+    overflow: visible;
+    padding-bottom: 0;
+    line-clamp: unset;
+    -webkit-line-clamp: unset;
+    -webkit-box-orient: unset;
+  }
+
+  .content .spoiler-button tg-spoiler {
+    background: transparent;
+    color: #000;
   }
 }

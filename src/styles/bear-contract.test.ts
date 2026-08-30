@@ -123,4 +123,16 @@ describe('bear CSS contract', () => {
 
     expect(compact(postsPage)).toContain('channelAvatar={channel.avatar} channelTitle={channel.title}')
   })
+
+  it('labels the locally observed Telegram comments iframe', () => {
+    expect(postEntry).toContain('class="post-comments"')
+    expect(postEntry).toContain('closest(\'.post-comments\')')
+    expect(postEntry).toContain('new MutationObserver')
+    expect(postEntry).toContain('frame.title = \'Telegram comments\'')
+  })
+
+  it('hides promoted title sources only in the HN theme', () => {
+    expect(compact(hnNews)).toContain('.post-content .post-title-source { display: none; }')
+    expect(feed).not.toContain('post-title-source')
+  })
 })

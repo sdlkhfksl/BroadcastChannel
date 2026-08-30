@@ -424,6 +424,11 @@ summary:focus-visible,
   padding-top: 5px;
 }
 
+.post-comments {
+  border: 0;
+  background: transparent;
+}
+
 .post-reactions > ul {
   gap: 3px;
 }
@@ -736,6 +741,10 @@ summary:focus-visible,
   border: 0;
   background: transparent;
   box-shadow: none;
+}
+
+.content .tgme_widget_message_tgsticker_wrap > img.sticker:not([src]):not([srcset]) {
+  display: none;
 }
 
 .content .tgme_widget_message_document_wrap,

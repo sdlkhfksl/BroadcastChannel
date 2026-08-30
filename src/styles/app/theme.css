@@ -34,6 +34,7 @@
     --text-color: #444;
     --link-color: #3273dc;
     --visited-color: #8b6fcb;
+    --feed-meta-visited-color: #7354b3;
     --code-background-color: #f2f2f2;
     --code-color: #222;
     --blockquote-color: #222;
@@ -62,6 +63,7 @@
       --text-color: #ddd;
       --link-color: #8cc2dd;
       --visited-color: #8b6fcb;
+      --feed-meta-visited-color: #a78bdf;
       --code-background-color: #000;
       --code-color: #ddd;
       --blockquote-color: #ccc;

@@ -67,5 +67,30 @@
       @apply h-auto w-auto border-0 shadow-none;
       max-width: min(256px, calc(100% - 1px));
     }
+
+    .sticker-fallback,
+    .tgme_widget_message_tgsticker_wrap:has(> img.sticker:not([src]):not([srcset]))::after {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2em 0.45em;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-media);
+      background: var(--surface-color);
+      color: var(--muted-color);
+      font-size: 0.875em;
+      line-height: 1.4;
+    }
+
+    .tgme_widget_message_tgsticker_wrap:has(> img.sticker:not([src]):not([srcset])) {
+      display: inline-flex;
+
+      > * {
+        display: none;
+      }
+
+      &::after {
+        content: 'Sticker unavailable';
+      }
+    }
   }
 }

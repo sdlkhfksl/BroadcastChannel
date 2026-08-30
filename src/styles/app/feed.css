@@ -32,6 +32,10 @@
     font-size: 0.82em;
   }
 
+  body.feed .post-meta {
+    --visited-color: var(--feed-meta-visited-color);
+  }
+
   .post-meta p {
     margin: 0;
   }
@@ -123,6 +127,10 @@
     display: inline-block;
   }
 
+  .post-tags a {
+    position: relative;
+  }
+
   .tag-icon {
     display: none;
     width: 1rem;
@@ -164,5 +172,19 @@
     margin: 1.25rem 0 0;
     padding: 0;
     list-style: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .post-comments {
+      border: 1px solid var(--border-color);
+      background: #fff;
+      color-scheme: light;
+    }
+
+    .post-comments iframe {
+      display: block;
+      background: #fff;
+      color-scheme: light;
+    }
   }
 }

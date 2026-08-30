@@ -26,6 +26,23 @@ const hasContent = contentHtml.length > 0
 const hasStoryTitle = post.title.trim().length > 0
 const hasReactions = Boolean(reactionsEnabled && post.reactions?.length > 0)
 const hasTags = post.tags.length > 0
+const commentsFrameScript = `<script>
+  const container = document.currentScript?.closest('.post-comments')
+  if (container) {
+    const titleFrame = () => {
+      const frame = container.querySelector('iframe')
+      if (!frame) return false
+      frame.title = 'Telegram comments'
+      return true
+    }
+    if (!titleFrame()) {
+      const observer = new MutationObserver(() => {
+        if (titleFrame()) observer.disconnect()
+      })
+      observer.observe(container, { childList: true, subtree: true })
+    }
+  }
+</script>`
 ---
 
 <article class="post-entry" style={{ 'view-transition-name': `post-${post.id}` }}>
@@ -111,6 +128,7 @@ const hasTags = post.tags.length > 0
         >
           /* Explicit closing avoids an astro-eslint-parser v3 crash. */
         </script>
+        <Fragment set:html={commentsFrameScript} />
       </section>
     )
   }
