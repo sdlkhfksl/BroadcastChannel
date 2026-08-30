@@ -12,6 +12,7 @@ const terminal = readFileSync(new URL('../../public/themes/terminal-base.css', i
 const hnNews = readFileSync(new URL('../../public/themes/hn-news.css', import.meta.url), 'utf8')
 const tgChannel = readFileSync(new URL('../../public/themes/tg-channel.css', import.meta.url), 'utf8')
 const zae = readFileSync(new URL('../../public/themes/zae.css', import.meta.url), 'utf8')
+const polar = readFileSync(new URL('../../public/themes/polar.css', import.meta.url), 'utf8')
 const postEntry = readFileSync(new URL('../components/PostEntry.astro', import.meta.url), 'utf8')
 const postsPage = readFileSync(new URL('../components/PostsPage.astro', import.meta.url), 'utf8')
 
@@ -28,6 +29,30 @@ const bearVariables = [
   '--code-background-color',
   '--code-color',
   '--blockquote-color',
+]
+
+const publicVariables = [
+  '--body-padding-inline',
+  '--feed-meta-visited-color',
+  '--accent-color',
+  '--border-color',
+  '--link-hover-color',
+  '--muted-color',
+  '--surface-color',
+  '--code-muted-color',
+  '--code-accent-color',
+  '--code-alt-accent-color',
+  '--reaction-paid-color',
+  '--reaction-paid-border-color',
+  '--reaction-paid-background-color',
+  '--shadow-soft',
+  '--radius-panel',
+  '--radius-chip',
+  '--radius-media',
+  '--box-margin',
+  '--back-to-top-offset',
+  '--icon-hover-filter',
+  '--icon-secondary-filter',
 ]
 
 function compact(css: string): string {
@@ -110,6 +135,39 @@ describe('bear CSS contract', () => {
     expect(compact(hnNews)).toContain('padding: 0 0 1rem;')
     expect(compact(tgChannel)).toContain('padding: 0 var(--body-padding-inline);')
     expect(compact(zae)).toContain('padding: 0 0 2rem;')
+  })
+
+  it('keeps Polar on the fixed-light Bear and public variable contracts', () => {
+    expect(polar).toMatch(/color-scheme:\s*light;/)
+    expect(polar).not.toMatch(/color-scheme:\s*light\s+dark;/)
+
+    for (const variable of [...bearVariables, ...publicVariables]) {
+      expect(polar).toContain(`${variable}:`)
+    }
+
+    expect(polar).toContain('--width: 760px;')
+  })
+
+  it('keeps Polar body padding aligned across desktop and mobile', () => {
+    const css = compact(polar)
+
+    expect(polar).toContain('--body-padding-inline: 1.25rem;')
+    expect(css).toContain('body { padding: 0 var(--body-padding-inline) 1.5rem;')
+    expect(css).toContain('@media (max-width: 37.5rem) { :root { --body-padding-inline: 1rem; }')
+  })
+
+  it('keeps Polar Scandinavian styling restrained and output-safe', () => {
+    expect(polar).not.toMatch(/\bdashed\b/i)
+    expect(polar).not.toMatch(/gradient\s*\(/i)
+    expect(polar).not.toMatch(/background(?:-image)?\s*:\s*url\s*\(/i)
+    expect(polar).not.toMatch(/text-transform\s*:\s*uppercase/i)
+
+    const shadows = [...polar.matchAll(/(?:--shadow-soft|box-shadow)\s*:([^;]+);/g)]
+    expect(shadows.length).toBeGreaterThan(0)
+    expect(shadows.every(([, value]) => value.trim() === 'none')).toBe(true)
+
+    expect(polar).toMatch(/@media\s*\(prefers-reduced-motion:\s*reduce\)/)
+    expect(polar).toMatch(/@media\s+print/)
   })
 
   it('keeps optional feed hooks hidden in Base', () => {

@@ -1,7 +1,7 @@
 ---
 version: alpha
 name: BroadcastChannel Base and theme overrides
-description: "The complete BroadcastChannel Base theme, its limited Bear CSS compatibility surface, and its optional Sepia, Aria, Terminal, HN News, TG Channel, and ZAE overrides."
+description: "The complete BroadcastChannel Base theme, its limited Bear CSS compatibility surface, and its optional Sepia, Aria, Terminal, HN News, TG Channel, ZAE, and Polar overrides."
 colors:
   primary: "#3273dc"
   base-light-background: "#fff"
@@ -155,13 +155,13 @@ components:
 
 BroadcastChannel ships one complete default theme, **Base**. It is a single-column, content-first BroadcastChannel design with modest type, direct links, restrained controls, and no card-based application shell. Its limited Bear CSS compatibility surface reuses Bear's palette, typography variables, `--width` content-width semantics, and selected shell hooks. The feed and content DOM, routes, and product behavior remain BroadcastChannel-specific.
 
-Nine optional, independently implemented overrides cascade over Base without changing the content model. **Sepia** (`/themes/sepia.css`) is fixed-light warm paper; **Aria** (`/themes/aria.css`) is neutral system-sans and follows the system light/dark preference; the **Terminal** family is fixed-dark, square, and monospace, with Amber, Green, Cyan, and Magenta entry files. **HN News** (`/themes/hn-news.css`), **TG Channel** (`/themes/tg-channel.css`), and **ZAE** (`/themes/zae.css`) are fixed-light visual interpretations of a dense full-post news feed, a single-column channel message history, and a compact technical document sheet respectively. `/themes/terminal-base.css` is imported internally by the four Terminal palettes and is not a standalone theme. See [THEMES.md](./THEMES.md) for entry points and configuration.
+Ten optional, independently implemented overrides cascade over Base without changing the content model. **Sepia** (`/themes/sepia.css`) is fixed-light warm paper; **Aria** (`/themes/aria.css`) is neutral system-sans and follows the system light/dark preference; the **Terminal** family is fixed-dark, square, and monospace, with Amber, Green, Cyan, and Magenta entry files. **HN News** (`/themes/hn-news.css`), **TG Channel** (`/themes/tg-channel.css`), and **ZAE** (`/themes/zae.css`) are fixed-light visual interpretations of a dense full-post news feed, a single-column channel message history, and a compact technical document sheet respectively. **Polar** (`/themes/polar.css`) is an original, fixed-light BroadcastChannel design with a minimal 760px single column. `/themes/terminal-base.css` is imported internally by the four Terminal palettes and is not a standalone theme. See [THEMES.md](./THEMES.md) for entry points and configuration.
 
 First-party rules, including Prism, use named cascade layers. Each optional theme is a normal unlayered stylesheet supplied through the trusted `HEADER_INJECT` path. Load only one override at a time.
 
 ## Colors
 
-The compact frontmatter tokens describe the public Bear-compatible Base palette and Sepia's fixed colors. Base exposes eight public color variables and selects the dark set with `prefers-color-scheme: dark`. Exact Aria, Terminal, HN News, TG Channel, and ZAE values remain authoritative in their CSS files rather than duplicating each palette here.
+The compact frontmatter tokens describe the public Bear-compatible Base palette and Sepia's fixed colors. Base exposes eight public color variables and selects the dark set with `prefers-color-scheme: dark`. Exact Aria, Terminal, HN News, TG Channel, ZAE, and Polar values remain authoritative in their CSS files rather than duplicating each palette here.
 
 | Public variable           | Base light token             | Base dark token             | Sepia token             |
 | ------------------------- | ---------------------------- | --------------------------- | ----------------------- |
@@ -182,7 +182,7 @@ Bear's Base visited color, `#8b6fcb`, is an explicit compatibility exception: ag
 
 Tailwind v4's `@theme` block bridges public variables into internal utility tokens. In particular, `--color-code` maps to `--code-background-color`, so it means the code **background**, not code text.
 
-Base and Aria declare `color-scheme: light dark` and follow the system preference. Sepia, HN News, TG Channel, and ZAE fix `color-scheme: light`; every Terminal palette fixes `color-scheme: dark`. CSS overrides affect the rendered page only. The manifest colors and hard-coded `theme-color` metadata remain at their Base values and do not automatically follow an override or user CSS.
+Base and Aria declare `color-scheme: light dark` and follow the system preference. Sepia, HN News, TG Channel, ZAE, and Polar fix `color-scheme: light`; every Terminal palette fixes `color-scheme: dark`. Polar uses a white canvas and alpha-black ink. CSS overrides affect the rendered page only. The manifest colors and hard-coded `theme-color` metadata remain at their Base values and do not automatically follow an override or user CSS.
 
 ## Typography
 
@@ -190,13 +190,13 @@ Base preserves Bear's public font semantics: body copy and Tailwind's `font-sans
 
 The Base site title is `1.5em`, reduced to `1.2em` at the small breakpoint. Content headings follow the restrained Tailwind scale already applied in `content/typography.css`, and post metadata is smaller than body copy. Do not introduce a separate display face or enlarge feed typography into a magazine-style hierarchy.
 
-Sepia intentionally replaces both public font families with its system sans-serif stack. Its site title is `1.25rem` at weight `600`; Sepia is not a Verdana variant. Aria also uses a system sans-serif stack with a restrained editorial hierarchy. All Terminal palettes use the same Fira Code–first monospace stack (`'Fira Code', Monaco, Consolas, 'Ubuntu Mono', monospace`) for headings, controls, metadata, and body copy; Fira Code is loaded from Google Fonts when the network is available and falls back to the system mono faces otherwise. HN News keeps typography small and information-dense, TG Channel uses a familiar system-sans message hierarchy, and ZAE combines restrained editorial headings with technical monospace accents. None of these three themes bundles a font from its visual reference.
+Sepia intentionally replaces both public font families with its system sans-serif stack. Its site title is `1.25rem` at weight `600`; Sepia is not a Verdana variant. Aria also uses a system sans-serif stack with a restrained editorial hierarchy. All Terminal palettes use the same Fira Code–first monospace stack (`'Fira Code', Monaco, Consolas, 'Ubuntu Mono', monospace`) for headings, controls, metadata, and body copy; Fira Code is loaded from Google Fonts when the network is available and falls back to the system mono faces otherwise. HN News keeps typography small and information-dense, TG Channel uses a familiar system-sans message hierarchy, and ZAE combines restrained editorial headings with technical monospace accents. None of these three themes bundles a font from its visual reference. Polar uses only a system sans-serif stack and bundles no fonts or assets.
 
 ## Layout
 
 `--width` is the maximum content width, not the body's outer border-box width. The centered body remains `box-sizing: border-box`; its outer maximum adds twice the internal `--body-padding-inline` to `--width`, so horizontal padding does not consume the documented content width. Base is `800px + 20px + 20px`. Sepia, Aria, and Terminal keep `--body-padding-inline` synchronized with their actual horizontal body padding (`1.25rem`, `1.5rem`, and `clamp(1rem, 4vw, 2.5rem)` respectively). HN News, TG Channel, and ZAE set that token and body inline padding to zero, then place responsive spacing on their inner regions. The header, navigation, full feed, pagination, and footer remain in one column; there is no public desktop sidebar.
 
-Base uses `37.5rem` as both Tailwind's `sm` bridge and the explicit mobile `max-width` breakpoint. At that boundary the header becomes two columns, the avatar and title shrink, social links move below them, desktop search is hidden, and the accessible `<details>` mobile search appears. Sepia uses the same breakpoint for its feed and directory adjustments.
+Base uses `37.5rem` as both Tailwind's `sm` bridge and the explicit mobile `max-width` breakpoint. At that boundary the header becomes two columns, the avatar and title shrink, social links move below them, desktop search is hidden, and the accessible `<details>` mobile search appears. Sepia uses the same breakpoint for its feed and directory adjustments. Polar keeps the shell and complete feed in one centered column with a `760px` maximum content width.
 
 Base gives `#main-content` `2rem` top padding and `1rem` bottom padding. Its feed entries use a divider and `2.75rem` separation. Sepia changes only the main top padding to `1.75rem`, removes the feed divider and separation, then uses a timestamp dot and narrow vertical rail. Aria uses an `820px` width, generous whitespace, a dashed square-line grid wash, dashed details, and section dividers; Terminal uses an `864px` width, compact blocks, an accent logo rail, thick accent media frames, and subtle solid feed separators. HN News keeps every full post visible while adding a compact story-title hierarchy above its metadata and content. TG Channel presents one centered column of messages with the real channel avatar repeated for each entry; it has no profile card or secondary column. ZAE reduces the shell to a compact identity header, technical toolbar, and framed document sheet. Every theme retains the complete Telegram stream and responsive media behavior.
 
@@ -206,7 +206,7 @@ Cross-document CSS View Transitions are enabled with `navigation: auto`. Keep `s
 
 Base is flat: `--shadow-soft` is `none`, panel surfaces stay on the page background, and hierarchy comes from whitespace, text contrast, one-pixel borders or dashed rules, plus occasional 3px accent rails on expandable content and text link previews.
 
-Sepia adds only shallow paper depth through four low-alpha shadow steps. Use it on the avatar, description, small navigation surfaces, reactions, pagination, and media. Aria and Terminal keep `--shadow-soft: none`; their hierarchy comes from grids, borders, surfaces, and spacing. HN News and ZAE rely primarily on flat color, rules, and typography; TG Channel may distinguish the light content surface from its cool page backdrop, but the post sequence must remain one coherent feed rather than a generic dashboard card grid. Do not add heavier shadows.
+Sepia adds only shallow paper depth through four low-alpha shadow steps. Use it on the avatar, description, small navigation surfaces, reactions, pagination, and media. Aria and Terminal keep `--shadow-soft: none`; their hierarchy comes from grids, borders, surfaces, and spacing. HN News and ZAE rely primarily on flat color, rules, and typography; TG Channel may distinguish the light content surface from its cool page backdrop, but the post sequence must remain one coherent feed rather than a generic dashboard card grid. Polar is entirely flat: hierarchy uses alpha-black ink, whitespace, and solid rules, with no shadows or patterns. Do not add heavier shadows.
 
 ## Shapes
 
@@ -249,9 +249,9 @@ External Telegram description and post HTML must pass through `sanitizeContentHt
 - Do keep `--body-padding-inline` synchronized with horizontal body padding so `--width` continues to mean maximum content width.
 - Do keep visible `:focus-visible` outlines, the skip link, semantic navigation labels, mobile touch targets, and `prefers-reduced-motion` behavior.
 - Do keep article metadata and tags out of bare `header`, `footer`, or `nav` elements so broad third-party theme rules do not capture them.
-- Do treat Base as the complete default and Sepia, Aria, one Terminal palette, HN News, TG Channel, or ZAE as a single optional unlayered CSS override.
-- Do preserve each theme's mode contract: Base and Aria follow the system; Sepia, HN News, TG Channel, and ZAE stay light; Terminal stays dark and monospace.
+- Do treat Base as the complete default and Sepia, Aria, one Terminal palette, HN News, TG Channel, ZAE, or Polar as a single optional unlayered CSS override.
+- Do preserve each theme's mode contract: Base and Aria follow the system; Sepia, HN News, TG Channel, ZAE, and Polar stay light; Terminal stays dark and monospace.
 - Don't add theme state, switching JavaScript, a sidebar, invented post titles, `/blog` or `/feed` structures, or a subscribe control that the product does not provide.
-- Don't blend Sepia's paper treatment, Aria's neutral grid, Terminal's terminal geometry, HN News's dense list, TG Channel's preview surface, or ZAE's technical editorial treatment into Base or one another.
+- Don't blend Sepia's paper treatment, Aria's neutral grid, Terminal's terminal geometry, HN News's dense list, TG Channel's preview surface, ZAE's technical editorial treatment, or Polar's minimal flat rules into Base or one another.
 - Don't expose `terminal-base.css` as a user theme or combine multiple override stylesheets.
 - Don't assume CSS themes update non-CSS metadata, and don't bypass sanitization for Telegram HTML.

@@ -73,4 +73,13 @@ The optional `public/themes/zae.css` theme takes visual inspiration from Zed's o
 - License URL: N/A (not applicable); official reference page: https://zed.dev/agentic-engineering
 - Nature: Visual inspiration; independent implementation, not adapted source
 
+## Polar theme
+
+The optional `public/themes/polar.css` theme is an original BroadcastChannel design. BroadcastChannel itself is the implementation source; there is no external upstream visual project. It is independently implemented and contains no third-party theme source code, fonts, or assets.
+
+- Project: https://github.com/ccbikai/BroadcastChannel
+- Author and maintainer: Kai Bi ([ccbikai](https://github.com/ccbikai) / [miantiao-me](https://github.com/miantiao-me))
+- License: [GNU Affero General Public License v3.0](https://github.com/ccbikai/BroadcastChannel/blob/main/LICENSE)
+- Nature: Original project-owned design and implementation; no external visual upstream
+
 These are attribution and compatibility notices only. They do not imply endorsement by or official affiliation with Bear Blog, Planetable, hugo-theme-terminal, Aria Template, Y Combinator or Hacker News, Telegram Messenger Inc., or Zed Industries, Inc., and they do not change the licensing of BroadcastChannel under the root `LICENSE`.

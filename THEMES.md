@@ -20,12 +20,15 @@ Use one of these exact `.env` configurations:
 | HN News          | Fixed light, full-post news feed    | `HEADER_INJECT='<link rel="stylesheet" href="/themes/hn-news.css">'`          |
 | TG Channel       | Fixed light, single-column messages | `HEADER_INJECT='<link rel="stylesheet" href="/themes/tg-channel.css">'`       |
 | ZAE              | Fixed light, compact document sheet | `HEADER_INJECT='<link rel="stylesheet" href="/themes/zae.css">'`              |
+| Polar            | Fixed light, minimal 760px column   | `HEADER_INJECT='<link rel="stylesheet" href="/themes/polar.css">'`            |
 
 Aria uses a neutral, system-sans presentation with light and dark palettes, a dashed square-line grid wash, and larger media radii. Sepia uses a fixed light palette and system-sans typography. All four Terminal variants use the same square, fixed-dark, Fira Code–first monospace design (loaded from Google Fonts when available); only their background, surface, accent, muted, border, and visited-link palettes differ.
 
 HN News is a compact, utilitarian full-post feed with a warm light canvas, orange accent, dense metadata, and a story-title hierarchy above each available post title; it does not collapse posts into summaries. TG Channel uses a cool page backdrop and one centered message column with the real channel avatar repeated for each entry, its channel title, and message time; it has no right-side profile card. ZAE uses a light, compact document sheet with a reduced identity header, technical toolbar, restrained rules, and monospace accents. These three themes deliberately fix `color-scheme: light`; they do not switch with the system preference.
 
-Each is an independent visual interpretation for BroadcastChannel, not a source adaptation or an official theme. No source code, CSS, fonts, or assets from Hacker News, Telegram, or Zed are bundled. See [NOTICE.md](./NOTICE.md) for provenance and non-affiliation details.
+Polar is an original BroadcastChannel theme with a fixed-light, 760px single-column layout, a system sans-serif stack, a white canvas with alpha-black ink, and solid rules. It uses no shadows or patterns and does not switch with the system preference.
+
+All overrides are independently implemented for BroadcastChannel. Polar is an original project-owned design; HN News, TG Channel, and ZAE are visual interpretations, not source adaptations or official themes. No source code, CSS, fonts, or assets from Hacker News, Telegram, or Zed are bundled. See [NOTICE.md](./NOTICE.md) for provenance and non-affiliation details.
 
 `/themes/terminal-base.css` is an internal shared stylesheet imported by the four Terminal entry files. Do not load it directly: it has no standalone palette. There is no `/themes/terminal.css` entry point.
 
@@ -57,6 +60,10 @@ HEADER_INJECT='<link rel="stylesheet" href="/themes/tg-channel.css">'
 
 ```env
 HEADER_INJECT='<link rel="stylesheet" href="/themes/zae.css">'
+```
+
+```env
+HEADER_INJECT='<link rel="stylesheet" href="/themes/polar.css">'
 ```
 
 ## Custom CSS
