@@ -12,7 +12,8 @@ English | [简体中文](./README.zh-cn.md)
 
 - **Turn your Telegram Channel into a MicroBlog**
 - **SEO friendly** `/sitemap.xml`
-- **0 JS on the browser side**
+- **Browser JS only on post detail**, for read-aloud and Telegram comments
+- **Read aloud** with Edge TTS, an estimated duration, and share
 - **RSS and RSS JSON** `/rss.xml` `/rss.json`
 
 ## 🪧 Demo
@@ -21,38 +22,28 @@ English | [简体中文](./README.zh-cn.md)
 
 - [面条实验室](https://memo.miantiao.me/)
 - [Find Blog👁发现博客](https://broadcastchannel.pages.dev/)
-- [Memos 广场 🎪](https://now.memobbs.app/)
 - [APPDO 数字生活指南](https://mini.appdo.xyz/)
 - [85.60×53.98卡粉订阅/提醒](https://tg.docofcard.com/)
-- [新闻在花频道](https://tg.istore.app/)
 - [ALL About RSS](https://blog.rss.tips/)
-- [Charles Chin's Whisper](https://memo.eallion.com/)
 - [PlayStation 新闻转发](https://playstationnews.pages.dev)
 - [Yu's Life](https://daily.pseudoyu.com/)
-- [Leslie 和朋友们](https://tg.imlg.co/)
 - [OKHK 分享](https://tg.okhk.net/)
-- [gledos 的微型博客](https://microblogging.gledos.science)
 - [Steve Studio](https://tgc.surgeee.me/)
-- [LiFePO4:沙雕吐槽](https://lifepo4.top)
 - [Hotspot Hourly](https://hourly.top/)
 - [大河马中文财经新闻分享](https://a.xiaomi318.com/)
 - [\_My. Tricks 🎩 Collection](https://channel.mykeyvans.com)
-- [小报童专栏精选](https://xiaobaotong.genaiprism.site/)
-- [Fake news](https://fake-news.csgo.ovh/)
 - [miyi23's Geekhub资源分享](https://gh.miyi23.top/)
 - [Magazine｜期刊杂志｜财新周刊](https://themagazine.top)
-- [Remote Jobs & Cooperation](https://share-remote-jobs.vercel.app/)
 - [甬哥侃侃侃--频道发布](https://ygkkktg.pages.dev)
 - [Fugoou.log](https://fugoou.xyz)
 - [Bboysoul的博客](https://tg.bboy.app/)
 - [MakerHunter](https://share.makerhunter.com/)
-- [ChatGPT/AI新闻聚合](https://g4f.icu/)
-- [Abner's memos](https://memos.abnerz6.top/)
 - [Appinn Talk](https://talk.appinn.net/)
 - [小报童优惠与排行榜](https://youhui.xiaobaoto.com/)
 - [热干面拌 10 号土豆泥](https://memo.moran.im/)
 - [万事屋工程部](https://t.wanshiwu.fyi/)
 - [折腾啥 @xream](https://telegram.zhetengsha.eu.org)
+- [北方的博客](https://100412.xyz)
 
 ### Platform
 
@@ -156,6 +147,13 @@ HIDE_DESCRIPTION=false
 COMMENTS=true
 REACTIONS=true
 RSS_BEAUTIFY=true
+
+## Read-aloud (Edge TTS). On by default; TTS=false removes the listen bar.
+## TTS_API/TTS_TOKEN default to the public forwarder; use your own to avoid it.
+TTS=true
+TTS_API=https://tts.134688.xyz
+TTS_TOKEN=tts100412
+TTS_VOICE=zh-CN-XiaoxiaoNeural
 
 ## Tags, links, and navigation (comma / semicolon separated)
 TAGS=tag1,tag2,tag3
