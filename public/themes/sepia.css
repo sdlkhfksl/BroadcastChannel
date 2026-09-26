@@ -92,7 +92,7 @@ hr {
 }
 
 .channel-description {
-  margin-top: 0.4rem;
+  margin-top: 0.5rem;
   padding: 0.65rem 1.25rem;
   border-left: 2px solid var(--border-color);
   border-radius: var(--radius-panel);
@@ -188,7 +188,7 @@ hr {
 
 .post-content {
   padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-bottom: 1.5rem;
 }
 
 .post-reactions {
@@ -198,11 +198,11 @@ hr {
 
 .post-tags {
   padding-top: 0;
-  padding-bottom: 1.25rem;
+  padding-bottom: 1.5rem;
 }
 
 .post-comments {
-  padding-top: 0.4rem;
+  padding-top: 0;
   padding-bottom: 1.5rem;
   border-top: 0;
   border-right: 0;
@@ -211,7 +211,8 @@ hr {
 }
 
 .post-entry > .post-meta + .post-tags,
-.post-entry > .post-meta + .post-reactions {
+.post-entry > .post-meta + .post-reactions,
+.post-entry > .post-meta + .post-comments {
   padding-top: 2rem;
 }
 

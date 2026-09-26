@@ -326,7 +326,7 @@ hr {
 
 .post-entry {
   margin-bottom: 0;
-  padding: 1.875rem 0;
+  padding: 2rem 0;
   border-bottom: 1px solid color-mix(in srgb, var(--terminal-foreground) 10%, transparent);
 }
 
@@ -370,13 +370,12 @@ hr {
 }
 
 .post-reactions,
-.post-tags,
-.post-comments {
+.post-tags {
   padding-top: 1rem;
 }
 
 .post-comments {
-  margin-top: 1rem;
+  margin-top: 0.5rem;
   padding: 0.5rem;
   border: 1px solid var(--terminal-border);
   background: #fff;
@@ -482,7 +481,7 @@ hr {
 
 .site-footer {
   margin-top: 2rem;
-  padding: 2.5rem 0;
+  padding: 2rem 0;
   border-top: 1px solid color-mix(in srgb, var(--terminal-foreground) 10%, transparent);
   color: var(--terminal-muted);
   text-align: left;
@@ -579,7 +578,7 @@ hr {
 .content blockquote {
   position: relative;
   margin: 0;
-  padding: 25px;
+  padding: 24px;
   border-top: 1px solid var(--terminal-accent);
   border-bottom: 1px solid var(--terminal-accent);
   border-left: none;

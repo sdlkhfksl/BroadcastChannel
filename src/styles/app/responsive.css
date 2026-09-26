@@ -28,6 +28,10 @@
       display: none;
     }
 
+    #main-content {
+      padding-top: 1.5rem;
+    }
+
     .mobile-search {
       display: block;
       margin-left: auto;

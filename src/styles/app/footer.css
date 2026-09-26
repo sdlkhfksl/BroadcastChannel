@@ -1,7 +1,7 @@
 @layer components {
   .site-footer {
     margin-top: 2rem;
-    padding: 25px 0;
+    padding: 24px 0;
     color: var(--muted-color);
     font-size: 0.8em;
     text-align: center;

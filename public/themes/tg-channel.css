@@ -305,7 +305,7 @@ summary:focus-visible,
   grid-template-columns: 45px 495px;
   width: 540px;
   max-width: 540px;
-  margin: 0 0 7px;
+  margin: 0 0 8px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -416,8 +416,7 @@ summary:focus-visible,
 }
 
 .post-reactions,
-.post-tags,
-.post-comments {
+.post-tags {
   grid-column: 2;
   width: 100%;
   max-width: 495px;
@@ -425,6 +424,10 @@ summary:focus-visible,
 }
 
 .post-comments {
+  grid-column: 2;
+  width: 100%;
+  max-width: 495px;
+  padding-top: 8px;
   border: 0;
   background: transparent;
 }
@@ -513,8 +516,9 @@ summary:focus-visible,
 }
 
 .site-footer {
-  margin: 0;
-  padding: 0.9rem 1rem;
+  width: min(100%, 540px);
+  margin: 0 auto;
+  padding: 0.9rem 10px;
   border-top: 1px solid var(--border-color);
   color: var(--muted-color);
   font-size: 0.7rem;

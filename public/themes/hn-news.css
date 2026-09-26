@@ -416,7 +416,7 @@ body.feed .post-meta a:visited {
 }
 
 .post-content {
-  padding-top: 0.55rem;
+  padding-top: 0.5rem;
 }
 
 .post-content .post-title-source {
@@ -433,7 +433,7 @@ body.feed .post-meta a:visited {
 .post-reactions,
 .post-tags,
 .post-comments {
-  padding-top: 0.45rem;
+  padding-top: 0.5rem;
 }
 
 .post-reactions > ul {
@@ -480,7 +480,7 @@ body.feed .post-meta a:visited {
 
 .post-comments {
   margin-top: 0.75rem;
-  padding: 0.6rem 0 0;
+  padding: 0.5rem 0 0;
   border: 0;
   border-top: 1px solid var(--border-color);
   background: transparent;
@@ -928,7 +928,7 @@ body.feed .post-meta a:visited {
   }
 
   #main-content {
-    padding: 8px 8px 0.5rem;
+    padding: 8px 10px 0.5rem;
   }
 
   body.post #main-content {

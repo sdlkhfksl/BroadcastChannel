@@ -67,6 +67,14 @@
   }
 
   .post-tags {
+    padding-top: 1.25rem;
+  }
+
+  .post-comments {
+    padding-top: 1.5rem;
+  }
+
+  .post-tags {
     margin: 0;
   }
 
